@@ -369,9 +369,9 @@ def submit():
 
 
     # Pfade zu den PDF-Dateien
-    input_pdf_path_1 = r"C:\Users\Framarz Alizadeh\Documents\Pflegebox\Projekt\PHS_Formulare_062024.pdf"
-    input_pdf_path_2 = r"C:\Users\Framarz Alizadeh\Documents\Pflegebox\Projekt\PHS_Formulare_0620241.pdf"
-    input_pdf_path_3 = r"C:\Users\Framarz Alizadeh\Documents\Pflegebox\Projekt\ssssaaa.pdf"  # Neuer Pfad für die dritte PDF
+    input_pdf_path_1 = r"Projekt\static\pdfs\PHS_Formulare_062024.pdf"
+    input_pdf_path_2 = r"Projekt\static\pdfs\PHS_Formulare_0620241.pdf"
+    input_pdf_path_3 = r"Projekt\static\pdfs\ssssaaa.pdf"  # Neuer Pfad für die dritte PDF
 
     # Sanitize the name to create a safe filename
     sanitized_name = secure_filename(name)
