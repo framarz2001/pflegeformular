@@ -271,6 +271,8 @@ die ich ohne Mehrkosten erhalten kann.
 
 @app.route('/submit', methods=['POST'])
 def submit():
+
+    base_dir = os.path.dirname(os.path.abspath(__file__))
     # Formulardaten abrufen
     name = request.form['name']
     dob = request.form['dob']
@@ -368,10 +370,7 @@ def submit():
 
 
 
-    # Pfade zu den PDF-Dateien
-    input_pdf_path_1 = r"Projekt\static\pdfs\PHS_Formulare_062024.pdf"
-    input_pdf_path_2 = r"Projekt\static\pdfs\PHS_Formulare_0620241.pdf"
-    input_pdf_path_3 = r"Projekt\static\pdfs\ssssaaa.pdf"  # Neuer Pfad für die dritte PDF
+
 
     # Sanitize the name to create a safe filename
     sanitized_name = secure_filename(name)
@@ -379,7 +378,11 @@ def submit():
         sanitized_name = "filled_form"
 
     output_pdf_filename = f"filled_form_{sanitized_name}.pdf"
-    output_pdf_path = os.path.join(r"C:\Users\Framarz Alizadeh\Documents\Pflegebox\Projekt", output_pdf_filename)
+    input_pdf_path_1 = os.path.join(base_dir, 'static', 'pdfs', 'PHS_Formulare_062024.pdf')
+    input_pdf_path_2 = os.path.join(base_dir, 'static', 'pdfs', 'PHS_Formulare_0620241.pdf')
+    input_pdf_path_3 = os.path.join(base_dir, 'static', 'pdfs', 'ssssaaa.pdf')
+    output_pdf_path = os.path.join(base_dir, output_pdf_filename)
+ 
 
     # Überprüfen, ob die PDFs existieren
     if not os.path.exists(input_pdf_path_1) or not os.path.exists(input_pdf_path_2) or not os.path.exists(input_pdf_path_3):
