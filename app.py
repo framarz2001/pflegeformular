@@ -18,7 +18,7 @@ def insert_line_break(address):
     Fügt nach dem ersten Vorkommen einer Zahl gefolgt von einem Leerzeichen einen Zeilenumbruch ein.
     Weitere Vorkommen bleiben unverändert.
     """
-    pattern = r'(\d+\s)'  # Muster: eine oder mehrere Ziffern gefolgt von einem Leerzeichen
+    pattern = r'(\d+\s)'
     return re.sub(pattern, r'\1\n', address, count=1)
 
 @app.route('/')
@@ -29,101 +29,242 @@ def home():
     <head>
         <meta charset="UTF-8">
         <title>PDF Formular Ausfüllen und Herunterladen</title>
+        <style>
+            body {
+                font-family: 'Arial', sans-serif;
+                line-height: 1.6;
+                margin: 0;
+                padding: 20px;
+                background-color: #f0f4f8;
+            }
+
+            .container {
+                max-width: 800px;
+                margin: 0 auto;
+                background: white;
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            }
+
+            h1 {
+                color: #2c3e50;
+                text-align: center;
+                margin-bottom: 30px;
+            }
+
+            h2 {
+                color: #34495e;
+                margin-top: 25px;
+                border-bottom: 2px solid #3498db;
+                padding-bottom: 5px;
+            }
+
+            .form-group {
+                margin-bottom: 20px;
+                padding: 15px;
+                background: #f8f9fa;
+                border-radius: 5px;
+            }
+
+            label {
+                display: block;
+                margin-bottom: 8px;
+                font-weight: 500;
+                color: #2c3e50;
+            }
+
+            input[type="text"],
+            input[type="number"] {
+                width: 100%;
+                padding: 8px;
+                border: 1px solid #ced4da;
+                border-radius: 4px;
+                box-sizing: border-box;
+            }
+
+            input[type="checkbox"],
+            input[type="radio"] {
+                margin-right: 8px;
+            }
+
+            .checkbox-group {
+                margin: 10px 0;
+                padding: 10px;
+                background: #e9ecef;
+                border-radius: 4px;
+            }
+
+            button {
+                background-color: #3498db;
+                color: white;
+                padding: 12px 25px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 16px;
+                display: block;
+                width: 100%;
+                margin-top: 25px;
+                transition: background-color 0.3s;
+            }
+
+            button:hover {
+                background-color: #2980b9;
+            }
+
+            .section-note {
+                color: #7f8c8d;
+                font-size: 0.9em;
+                margin-top: 5px;
+            }
+
+            .product-section {
+                border-left: 3px solid #3498db;
+                padding-left: 15px;
+                margin: 15px 0;
+            }
+        </style>
     </head>
     <body>
-        <h1>PDF Formular Ausfüllen und Herunterladen</h1>
-        <form action="/submit" method="post">
-            <label for="name">Name Vorname:</label>
-            <input type="text" id="name" name="name" required><br><br>
-            
-            <label for="dob">Geburtsdatum:</label>
-            <input type="text" id="dob" name="dob" required><br><br>
-            
-            <label for="insurance_number">Versichertennummer:</label>
-            <input type="text" id="insurance_number" name="insurance_number" required><br><br>
-            
-            <!-- Neues Feld für Pflegegrad -->
-            <label for="pflegegrad">Pflegegrad:</label>
-            <input type="number" id="pflegegrad" name="pflegegrad" min="1" max="5" required><br><br>
-            
-            <label for="address">Anschrift:</label>
-            <input type="text" id="address" name="address" required><br><br>
-            
-            <label for="insurance">Pflegekasse:</label>
-            <input type="text" id="insurance" name="insurance" required><br><br>
-            
-            <label for="apply_costs">Ich beantrage die Kostenübernahme für:</label>
-            <input type="checkbox" id="apply_costs" name="apply_costs" value="yes"> zum Verbrauch bestimmte Pflegehilfsmittel – Produktgruppe (PG 54)<br><br>
-            
-            <h2>Produktauswahl:</h2>
+        <div class="container">
+            <h1>PDF Formular Ausfüllen und Herunterladen</h1>
+            <form action="/submit" method="post">
+                
+                <div class="form-group">
+                    <label for="name">Name Vorname:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="dob">Geburtsdatum:</label>
+                    <input type="text" id="dob" name="dob" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="insurance_number">Versichertennummer:</label>
+                    <input type="text" id="insurance_number" name="insurance_number" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="pflegegrad">Pflegegrad:</label>
+                    <input type="number" id="pflegegrad" name="pflegegrad" min="1" max="5" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Anschrift:</label>
+                    <input type="text" id="address" name="address" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="insurance">Pflegekasse:</label>
+                    <input type="text" id="insurance" name="insurance" required>
+                </div>
+
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" id="apply_costs" name="apply_costs" value="yes">
+                        Ich beantrage die Kostenübernahme für: zum Verbrauch bestimmte Pflegehilfsmittel – Produktgruppe (PG 54)
+                    </label>
+                </div>
+
+                            <h2>Produktauswahl:</h2>
             <label for="saugende_bettschutzeinlagen">Saugende Bettschutzeinlagen Einmalgebrauch:</label>
-            <input type="number" id="saugende_bettschutzeinlagen" name="saugende_bettschutzeinlagen" min="0" max="10"><br><br>
+            <input type="number" id="saugende_bettschutzeinlagen" name="saugende_bettschutzeinlagen"><br><br>
             
             <label for="fingerlinge">Fingerlinge (Latex, unsteril; für Latexallergiker latexfrei, unsteril):</label>
-            <input type="number" id="fingerlinge" name="fingerlinge" min="0" max="10"><br><br>
+            <input type="number" id="fingerlinge" name="fingerlinge"><br><br>
             
             <label for="einmalhandschuhe">Einmalhandschuhe (Latex, unsteril; für Latexallergiker latexfrei, unsteril):</label>
-            <input type="number" id="einmalhandschuhe" name="einmalhandschuhe" min="0" max="10"><br><br>
+            <input type="number" id="einmalhandschuhe" name="einmalhandschuhe"><br><br>
             
             <label for="gesichtsmasken">Medizinische Gesichtsmasken:</label>
-            <input type="number" id="gesichtsmasken" name="gesichtsmasken" min="0" max="10"><br><br>
+            <input type="number" id="gesichtsmasken" name="gesichtsmasken" ><br><br>
             
             <label for="halbmasken">Partikelfiltrierende Halbmasken (FFP-2 oder vergleichbare Masken):</label>
-            <input type="number" id="halbmasken" name="halbmasken" min="0" max="10"><br><br>
+            <input type="number" id="halbmasken" name="halbmasken"><br><br>
             
             <label for="schutzschuerzen_einmal">Schutzschürzen - Einmalgebrauch:</label>
-            <input type="number" id="schutzschuerzen_einmal" name="schutzschuerzen_einmal" min="0" max="10"><br><br>
+            <input type="number" id="schutzschuerzen_einmal" name="schutzschuerzen_einmal"><br><br>
             
             <label for="schutzschuerzen_wieder">Schutzschürzen - wiederverwendbar:</label>
-            <input type="number" id="schutzschuerzen_wieder" name="schutzschuerzen_wieder" min="0" max="10"><br><br>
+            <input type="number" id="schutzschuerzen_wieder" name="schutzschuerzen_wieder"><br><br>
             
             <label for="schutzservietten">Schutzservietten zum Einmalgebrauch:</label>
-            <input type="number" id="schutzservietten" name="schutzservietten" min="0" max="10"><br><br>
+            <input type="number" id="schutzservietten" name="schutzservietten"><br><br>
             
             <label for="haendedesinfektionsmittel">Händedesinfektionsmittel:</label>
-            <input type="number" id="haendedesinfektionsmittel" name="haendedesinfektionsmittel" min="0" max="10"><br><br>
+            <input type="number" id="haendedesinfektionsmittel" name="haendedesinfektionsmittel"><br><br>
             
             <label for="flaechendesinfektionsmittel">Flächendesinfektionsmittel:</label>
-            <input type="number" id="flaechendesinfektionsmittel" name="flaechendesinfektionsmittel" min="0" max="10"><br><br>
+            <input type="number" id="flaechendesinfektionsmittel" name="flaechendesinfektionsmittel"><br><br>
             
             <label for="haendedesinfektionstuecher">Händedesinfektionstücher:</label>
-            <input type="number" id="haendedesinfektionstuecher" name="haendedesinfektionstuecher" min="0" max="10"><br><br>
+            <input type="number" id="haendedesinfektionstuecher" name="haendedesinfektionstuecher"><br><br>
             
             <label for="flaechendesinfektionstuecher">Flächendesinfektionstücher:</label>
-            <input type="number" id="flaechendesinfektionstuecher" name="flaechendesinfektionstuecher" min="0" max="10"><br><br>
-        
-            <label for="apply_hygiene">Pflegehilfsmittel zur Körperpflege/Körperhygiene (PG 51) unter Abzug der gesetzlichen Zuzahlung, soweit keine Befreiung vorliegt:</label>
-            <input type="checkbox" id="apply_hygiene" name="apply_hygiene" value="yes"><br><br>
-        
-            <label for="saugende_bettschutzeinlagen_wieder">Saugende Bettschutzeinlagen wiederverwendbar:</label>
-            <input type="number" id="saugende_bettschutzeinlagen_wieder" name="saugende_bettschutzeinlagen_wieder" min="0" max="10"><br><br>
-        
-            <label for="beratung_bestaetigung">Ich wurde vor der Übergabe des Pflegehilfsmittels/der Pflegehilfsmittel von dem vorgenannten Leistungserbringer umfassend beraten, insbesondere darüber:<br>
-                - welche Produkte und Versorgungsmöglichkeiten für meine konkrete Versorgungssituation geeignet und notwendig sind,<br>
-                - die ich ohne Mehrkosten erhalten kann.</label>
-            <input type="checkbox" id="beratung_bestaetigung" name="beratung_bestaetigung" value="yes" required><br><br>
-    
-            <label for="confirm_private_care">
-            Mit meiner Unterschrift bestätige ich, dass ich darüber informiert wurde, dass die gewünschten Produkte ausnahmslos für die häusliche Pflege durch eine private Pflegeperson (und nicht durch Pflegedienste oder Einrichtungen der Tagespflege) verwendet werden dürfen.
-            </label>
-            <input type="checkbox" id="confirm_private_care" name="confirm_private_care" required><br><br>
-    
-            <label for="confirm_costs">
-            Ich bin darüber aufgeklärt worden, dass die Pflegekasse die Kosten nur für solche Pflegehilfsmittel und in dem finanziellen Umfang übernimmt, für die ich eine Kostenübernahmeerklärung durch die Pflegekasse erhalten habe. Kosten für evtl. darüber hinausgehende Leistungen sind von mir selbst zu tragen.
-            </label>
-            <input type="checkbox" id="confirm_costs" name="confirm_costs" required><br><br>
-    
-            <label for="beratung_form">Form des Beratungsgesprächs:</label><br>
-            <input type="radio" id="beratung_geschaeftsraeume" name="beratung_form" value="geschaeftsraeume"> Beratung in den Geschäftsräumen<br>
-            <input type="radio" id="beratung_telefonisch" name="beratung_form" value="telefonisch"> Individuelle telefonische oder digitale Beratung (z. B. Videochat)<br>
-            <input type="radio" id="beratung_haeuslichkeit" name="beratung_form" value="haeuslichkeit"> Beratung in der Häuslichkeit<br><br>
-    
-            <label for="berater_person">Der o. g. Leistungserbringer hat mich:</label><br>
+            <input type="number" id="flaechendesinfektionstuecher" name="flaechendesinfektionstuecher" ><br><br>
+
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" id="apply_hygiene" name="apply_hygiene" value="yes">
+                        Pflegehilfsmittel zur Körperpflege/Körperhygiene (PG 51) unter Abzug der gesetzlichen Zuzahlung, soweit keine Befreiung vorliegt:
+                    </label>
+                </div>
+
+                 <label for="saugende_bettschutzeinlagen_wieder">Saugende Bettschutzeinlagen wiederverwendbar:</label>
+            <input type="number" id="saugende_bettschutzeinlagen_wieder" name="saugende_bettschutzeinlagen_wieder"><br><br>
+
+                    <div class="checkbox-group">
+                    <label>
+                       <input type="checkbox" id="confirm_private_care" name="confirm_private_care" value="yes" required>
+                        Ich wurde vor der Übergabe des Pflegehilfsmittels/der Pflegehilfsmittel von dem vorgenannten Leistungserbringer umfassend beraten, insbesondere darüber:
+
+welche Produkte und Versorgungsmöglichkeiten für meine konkrete Versorgungssituation geeignet und notwendig sind,
+
+die ich ohne Mehrkosten erhalten kann.
+                    </label>
+                </div>
+
+                <div class="checkbox-group">
+                    <label>
+                       <input type="checkbox" id="beratung_bestaetigung" name="beratung_bestaetigung" value="yes" required>
+                        Mit meiner Unterschrift bestätige ich, dass ich darüber informiert wurde, dass die gewünschten Produkte ausnahmslos für die häusliche Pflege durch eine private Pflegeperson (und nicht durch Pflegedienste oder Einrichtungen der Tagespflege) verwendet werden dürfen.
+                    </label>
+                </div>
+
+                <div class="checkbox-group">
+                    <label>
+                       <input type="checkbox" id="confirm_costs" name="confirm_costs" value="yes" required>
+                       Ich bin darüber aufgeklärt worden, dass die Pflegekasse die Kosten nur für solche Pflegehilfsmittel und in dem finanziellen Umfang übernimmt, für die ich eine Kostenübernahmeerklärung durch die Pflegekasse erhalten habe. Kosten für evtl. darüber hinausgehende Leistungen sind von mir selbst zu tragen.
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label>Beratungsform:</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="radio" id="beratung_geschaeftsraeume" name="beratung_form" value="geschaeftsraeume">
+                            Beratung in den Geschäftsräumen
+                        </label>
+                        <label>
+                            <input type="radio" id="beratung_telefonisch" name="beratung_form" value="telefonisch">
+                            Individuelle telefonische oder digitale Beratung (z. B. Videochat)
+                        </label>
+                        <label>
+                            <input type="radio" id="beratung_haeuslichkeit" name="beratung_form" value="haeuslichkeit">
+                            Beratung in der Häuslichkeit
+                        </label>
+                    </div>
+                </div>
+
+                <label for="berater_person">Der o. g. Leistungserbringer hat mich:</label><br>
             <input type="radio" id="berater_personal" name="berater_person" value="mich"> mich persönlich<br>
             <input type="radio" id="berater_betreuung" name="berater_person" value="betreuung"> meine Betreuungsperson (ges. Vertreter/Bevollmächtigten oder Angehörigen)<br><br>
-    
-            <button type="submit">Senden</button>
-        </form>
+
+                <button type="submit">PDF generieren und herunterladen</button>
+            </form>
+        </div>
     </body>
     </html>
     '''
@@ -161,6 +302,71 @@ def submit():
         "haendedesinfektionstuecher": int(request.form.get("haendedesinfektionstuecher", "0") or 0),
         "flaechendesinfektionstuecher": int(request.form.get("flaechendesinfektionstuecher", "0") or 0)
     }
+
+      # Preise pro Produkt (netto)
+    produkt_preise_netto = {
+        "saugende_bettschutzeinlagen": 0.41,
+        "saugende_bettschutzeinlagen_wieder": 21.98,
+        "fingerlinge": 0.05,
+        "einmalhandschuhe": 0.08,
+        "gesichtsmasken": 0.14,
+        "halbmasken": 0.65,
+        "schutzschuerzen_einmal": 0.12,
+        "schutzschuerzen_wieder": 21.50,
+        "schutzservietten": 0.12,
+        "haendedesinfektionsmittel": 1.20,
+        "flaechendesinfektionsmittel": 1.14,
+        "haendedesinfektionstuecher": 0.10,
+        "flaechendesinfektionstuecher": 0.10
+    }
+
+    # Bruttosumme berechnen (inkl. 19% MwSt.)
+    gesamt_brutto = 0.0
+    for produkt, menge in produkte.items():
+        preis_netto = produkt_preise_netto.get(produkt, 0)
+        preis_brutto = preis_netto * 1.19
+        gesamt_brutto += menge * preis_brutto
+
+    if gesamt_brutto > 40:
+        return '''
+            <!DOCTYPE html>
+            <html lang="de">
+            <head>
+                <meta charset="UTF-8">
+                <title>Fehler</title>
+                <style>
+                    body {
+                        background-color: #fce4e4;
+                        font-family: Arial, sans-serif;
+                        color: #b71c1c;
+                        text-align: center;
+                        padding: 100px;
+                    }
+                    .box {
+                        background-color: white;
+                        padding: 40px;
+                        border-radius: 8px;
+                        display: inline-block;
+                        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                    }
+                    h1 {
+                        color: #c62828;
+                    }
+                    p {
+                        font-size: 18px;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="box">
+                    <h1>Maximale Kapazität erreicht</h1>
+                    <p>Die Gesamtsumme Ihrer ausgewählten Produkte darf 40 € inkl. MwSt. nicht überschreiten.<br>Bitte reduzieren Sie Ihre Auswahl.</p>
+                </div>
+            </body>
+            </html>
+        '''
+
+
 
     # Pfade zu den PDF-Dateien
     input_pdf_path_1 = r"C:\Users\Framarz Alizadeh\Documents\Pflegebox\Projekt\PHS_Formulare_062024.pdf"
@@ -445,4 +651,6 @@ def submit():
         return f"Fehler beim Verarbeiten der PDF: {str(e)}"
 
 if __name__ == '__main__':
+
+
     app.run(debug=False, host='0.0.0.0')
